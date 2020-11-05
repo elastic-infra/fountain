@@ -80,7 +80,20 @@ func _main() error {
 				},
 				Writer: f,
 				After: func() error {
-					return f.Close()
+					defer f.Close()
+
+					if strings.HasSuffix(key, ".zip") {
+						err = decompressZip(f)
+						if err != nil {
+							return err
+						}
+						err = os.Remove(f.Name())
+						if err != nil {
+							return err
+						}
+					}
+
+					return nil
 				},
 			})
 		}
