@@ -136,10 +136,11 @@ func parse() error {
 	}
 
 	conf.Bucket = u.Host
-	conf.Prefix = strings.TrimPrefix(u.Path, "/")
+	conf.Prefix = u.Path
 	if !strings.HasSuffix(conf.Prefix, "/") {
 		conf.Prefix = conf.Prefix + "/"
 	}
+	conf.Prefix = strings.TrimPrefix(conf.Prefix, "/")
 
 	if conf.Debug {
 		log.Printf("DEBUG: config %+v\n", conf)
