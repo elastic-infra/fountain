@@ -63,7 +63,11 @@ func _main() error {
 				log.Printf("DEBUG: download s3://%s/%s -> %s\n", conf.Bucket, key, path)
 			}
 
-			f, err := os.Create(path)
+			perm := os.FileMode(0o666)
+			if strings.HasSuffix(key, ".sh") {
+				perm = 0o777
+			}
+			f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, perm)
 			if err != nil {
 				iErr = err
 				return false
